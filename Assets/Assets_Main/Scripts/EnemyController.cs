@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = transform.parent.GetComponent<EnemySpawner>().player.gameObject;
         rb = GetComponent<Rigidbody>();
     }
 
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
         return direction;
     }
 
-    void LookAtPlayer ()
+    void LookAtPlayer()
     {
         Quaternion rotation = Quaternion.LookRotation(FindPlayerDirection(), Vector3.up);
         transform.rotation = rotation;
@@ -37,7 +37,42 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         // Move the enemy in the direction of the player at a regular speed
+
         rb.velocity = FindPlayerDirection() * speed * Time.deltaTime;
+
         LookAtPlayer();
+    }
+
+    void SelfDestroy()
+    {
+        // Do animations
+        Destroy(gameObject);
+    }
+
+    void KillPlayer()
+    {
+        GameManager.Instance.PlayerLost();
+    }
+
+    // Detects bullets and die from them
+    private void OnTriggerEnter(Collider other)
+    {
+        // if hits a trigger with the layer of the player, destroy
+        if (other.gameObject.layer == player.layer)
+        {
+            other.GetComponent<ProjectileController>().ReducePiercing();
+            GameManager.Instance.AddScore(1); 
+            SelfDestroy();
+        }
+    }
+
+    // Detects Player and kills him.
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == player.layer)
+        {
+            // The player loses
+            KillPlayer();
+        }
     }
 }
