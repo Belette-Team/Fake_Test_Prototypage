@@ -137,6 +137,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
     }
+
     void ResumeGame()
     {
         Time.timeScale = 1;
