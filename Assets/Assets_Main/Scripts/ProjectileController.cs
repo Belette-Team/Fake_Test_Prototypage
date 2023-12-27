@@ -5,17 +5,34 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
     public int projectilePiercing;
+    public float projectileRange;
+    private float timeBeforeDestroy;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    private void OnEnable()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        float speed = rb.velocity.magnitude;
+        timeBeforeDestroy = projectileRange / speed;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if(timeBeforeDestroy <=0)
+        {
+            Debug.Log("Destroy");
+            SelfDestroy();
+        }
+        else
+        {
+            timeBeforeDestroy -= Time.deltaTime;
+        }
     }
 
     public void ReducePiercing()
@@ -23,7 +40,12 @@ public class ProjectileController : MonoBehaviour
         projectilePiercing--;
         if (projectilePiercing <= 0)
         {
-            Destroy(gameObject);
+            SelfDestroy();
         }
+    }
+
+    private void SelfDestroy()
+    {
+        gameObject.SetActive(false);
     }
 }

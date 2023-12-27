@@ -11,7 +11,6 @@ public class StaticData : MonoBehaviour
 
     void Awake()
     {
-
         if (Instance != null)
         {
             Destroy(gameObject);

@@ -82,10 +82,16 @@ MonoBehaviour:
   numberOfProjectiles: 1
   fireRate: 1
   movementSpeed: 10
-  projectileSpeed: 10
+  projectileSpeed: 15
   projectilePiercing: 1
-  fireRateScaling: 1.25
+  collectionRadius: 3
+  playerExperience: 0
+  maxExperience: 100
+  maxExperienceScaling: 1.4
+  fireRateScaling: 1.2
   ballPrefab: {fileID: 8447113142536008075, guid: a2d772829ce043641841b361ccc65f1d, type: 3}
+  collectiblePrefab: {fileID: 8279763520225369672, guid: a19c0476aa2fe6844a4f80021a71b4ed, type: 3}
+  experienceBar: {fileID: 0}
 --- !u!1 &6330127156935308299
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,8 +482,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7762858293785832351}
-  m_LocalRotation: {x: 0.52465034, y: 0.0038388374, z: -0.0023386825, w: 0.8513059}
-  m_LocalPosition: {x: -0.060712695, y: 13.28593, z: -6.6847258}
+  m_LocalRotation: {x: -0.47898313, y: -0.0033892966, z: 0.0019047693, w: -0.87781554}
+  m_LocalPosition: {x: -0.29973817, y: 16.42606, z: -8.856038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

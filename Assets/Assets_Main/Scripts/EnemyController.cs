@@ -45,13 +45,20 @@ public class EnemyController : MonoBehaviour
 
     void SelfDestroy()
     {
+        if(GetComponent<DropCollectible>()!=null)
+        {
+            float rand = Random.Range(0, GameManager.Instance.XpSmallOdds + GameManager.Instance.XpBigOdds);
+            if(rand < GameManager.Instance.XpSmallOdds)
+            {
+                GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpSmallCollectible);
+            }
+            else
+            {
+                GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpBigCollectible);
+            }
+        }
         // Do animations
-        Destroy(gameObject);
-    }
-
-    void KillPlayer()
-    {
-        GameManager.Instance.PlayerLost();
+        gameObject.SetActive(false);
     }
 
     // Detects bullets and die from them
@@ -62,6 +69,7 @@ public class EnemyController : MonoBehaviour
         {
             other.GetComponent<ProjectileController>().ReducePiercing();
             GameManager.Instance.AddScore(1); 
+
             SelfDestroy();
         }
     }
@@ -70,9 +78,20 @@ public class EnemyController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == player.layer)
-        {
-            // The player loses
-            KillPlayer();
+        { 
+            //It's the player
+            if(collision.gameObject.GetComponent<PlayerController>() != null) 
+            {
+                collision.gameObject.GetComponent<PlayerController>().ReducePlayerHealth(1);
+                SelfDestroy();
+            }
+
+            //It's a mimic
+            if (collision.gameObject.GetComponent<PlayerControllerMimic>() != null)
+            {
+                collision.gameObject.GetComponent<PlayerControllerMimic>().ReducePlayerHealth(1);
+                SelfDestroy();
+            }
         }
     }
 }

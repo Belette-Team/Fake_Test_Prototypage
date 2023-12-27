@@ -13,13 +13,26 @@ public class GameManager : MonoBehaviour
 
     [Header ("References")]
     public TMP_Text lossText;
-    public TMP_Text highestScore;
+    public TMP_Text currentScoreText;
+    public TMP_Text highestScoreText;
     public GameObject draftChoices;
     public PlayerController playerController;
+    public GameObject projectilePrefab;
+    public GameObject collectiblePrefab;
 
-    [Header ("Game Design")]
+    [Header ("Game Design Player")]
     public float playAgainTime; //after losing, reset the scene after X seconds
+
+    [Header("Collectibles")]
     public float levelUpTime; //level up every X seconds
+    public int XpSmallCollectibleAmount;//Amount of xp provided by small xp collectibles
+    public int XpBigCollectibleAmount;//Amount of xp provided by big xp collectibles
+    public float XpSmallOdds;//Amount of xp provided by small xp collectibles
+    public float XpBigOdds;//Amount of xp provided by small xp collectibles
+    public float startingSpeed;//Initial speed of collectible
+    public float scalingSpeed;//Scaling speed
+
+    [Header("Game Design Enemy")]
     public float enemyScalingRate; //increase the scaling every X seconds
 
     [Header("To Save")]
@@ -45,7 +58,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         //set values
-        highestScore.text = "Highest Score: " + StaticData.Instance.highestScore;
+        highestScoreText.text = "Highest Score: " + StaticData.Instance.highestScore;
 
         //Disable UI elements
         lossText.enabled = false;
@@ -55,16 +68,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(levelUpTimeTimer<levelUpTime)
-        {
-            levelUpTimeTimer += Time.deltaTime;
-        }
-        else
-        {
-            //Level up
-            OnLevelUp();
-            levelUpTimeTimer = 0;
-        }
+
     }
 
     public void PlayerLost()
@@ -109,7 +113,9 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
+        playerController.RefreshUI();
         HideChoices();
+
         ResumeGame();
 
     }
@@ -125,13 +131,19 @@ public class GameManager : MonoBehaviour
 
     public void AddScore(int score)
     {
-        currentScore++;
+        //recalcule le score
+        currentScore += score;
 
-        if(StaticData.Instance.highestScore < currentScore)
+        //reaffiche le score
+        currentScoreText.text = "Score: "+currentScore;
+
+        if (StaticData.Instance.highestScore < currentScore)
         {
             StaticData.Instance.highestScore = currentScore;
         }
     }
+
+
 
     void PauseGame()
     {
