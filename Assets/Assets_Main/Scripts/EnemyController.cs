@@ -50,11 +50,17 @@ public class EnemyController : MonoBehaviour
             float rand = Random.Range(0, GameManager.Instance.XpSmallOdds + GameManager.Instance.XpBigOdds);
             if(rand < GameManager.Instance.XpSmallOdds)
             {
-                GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpSmallCollectible);
+                if(GetComponent<DropCollectible>() !=null)
+                {
+                    GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpSmallCollectible);
+                }
             }
             else
             {
-                GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpBigCollectible);
+                if (GetComponent<DropCollectible>() != null)
+                {
+                    GetComponent<DropCollectible>().DropCollectibleOnPosition(transform.position, CollectibleType.XpBigCollectible);
+                }
             }
         }
         // Do animations

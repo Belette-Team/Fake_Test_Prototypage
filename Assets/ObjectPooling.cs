@@ -31,33 +31,35 @@ public class ObjectPooling : MonoBehaviour
     {
         for (int i = 0; i < collectiblePoolSize; i++)
         {
-            GameObject obj = Instantiate(collectiblePrefab, transform.position, Quaternion.identity);
-            obj.SetActive(false);
-            collectiblePooledObjects.Add(obj);
+            GameObject col = Instantiate(collectiblePrefab, transform.position, Quaternion.identity);
+            col.SetActive(false);
+            collectiblePooledObjects.Add(col);
         }
         for (int i = 0;i < enemyPoolSize; i++)
         {
-            GameObject obj = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-            obj.SetActive(false);
-            enemyPooledObjects.Add(obj);
+            GameObject ene = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+            ene.SetActive(false);
+            enemyPooledObjects.Add(ene);
         }
-        for (int i = 0; i<= projectilePoolSize; i++)
+        for (int i = 0; i< projectilePoolSize; i++)
         {
-            GameObject obj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            obj.SetActive(false);
-            projectilePooledObjects.Add(obj);
+            GameObject pro = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+            pro.SetActive(false);
+            projectilePooledObjects.Add(pro);
         }
     }
     public GameObject GetPooledObject(List<GameObject> gameObjects, GameObject prefab, Vector3 position, Transform parent)
     { 
         for (int i = 0; i < gameObjects.Count; i++)
         {
-            if (!gameObjects[i].activeInHierarchy)
+            if (gameObjects[i] != null)
             {
-                gameObjects[i].transform.position = position;
-                gameObjects[i].transform.parent = parent;
-                Debug.Log("Pools" + prefab.name);
-                return gameObjects[i];
+                if (!gameObjects[i].activeInHierarchy)
+                {
+                    gameObjects[i].transform.position = position;
+                    gameObjects[i].transform.parent = parent;
+                    return gameObjects[i];
+                }
             }
         }
         GameObject newObj = Instantiate(prefab, position, Quaternion.identity, parent);
@@ -65,6 +67,27 @@ public class ObjectPooling : MonoBehaviour
         gameObjects.Add(newObj);
         return newObj;
     }
+
+    public GameObject GetPooledObject(List<GameObject> gameObjects, GameObject prefab, Vector3 position)
+    {
+        for (int i = 0; i < gameObjects.Count; i++)
+        {
+            if (gameObjects[i] != null)
+            {
+                if (!gameObjects[i].activeInHierarchy)
+                {
+                    gameObjects[i].transform.position = position;
+                    return gameObjects[i];
+                }
+            }
+        }
+        GameObject newObj = Instantiate(prefab, position, Quaternion.identity);
+        Debug.Log("Created new " + prefab.name);
+        newObj.SetActive(false);
+        gameObjects.Add(newObj);
+        return newObj;
+    }
+
 
     // Update is called once per frame
     void Update()

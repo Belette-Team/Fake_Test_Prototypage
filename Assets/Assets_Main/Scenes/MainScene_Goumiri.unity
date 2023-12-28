@@ -566,7 +566,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectiblePooledObjects: []
   collectiblePrefab: {fileID: 8279763520225369672, guid: a19c0476aa2fe6844a4f80021a71b4ed, type: 3}
-  collectiblePoolSize: 100
+  collectiblePoolSize: 200
   enemyPooledObjects: []
   enemyPrefab: {fileID: 661079145262693362, guid: 2b98941bd63922c4dbffdbaef0bdb125, type: 3}
   enemyPoolSize: 2000

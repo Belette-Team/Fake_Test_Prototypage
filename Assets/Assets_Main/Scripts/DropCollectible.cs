@@ -23,7 +23,7 @@ public class DropCollectible : MonoBehaviour
     }
     public void DropCollectibleOnPosition(Vector3 position, CollectibleType p_collectibleType)
     {
-        GameObject collectible = objectPooling.GetPooledObject(objectPooling.collectiblePooledObjects, objectPooling.collectiblePrefab, position, GameManager.Instance.gameObject.transform);
+        GameObject collectible = objectPooling.GetPooledObject(objectPooling.collectiblePooledObjects, objectPooling.collectiblePrefab, position);
         collectible.SetActive(true);
 
         if (collectible.GetComponent<Collectible>() !=null)

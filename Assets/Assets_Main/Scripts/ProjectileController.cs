@@ -11,7 +11,9 @@ public class ProjectileController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        Rigidbody rb = GetComponent<Rigidbody>();
+        float speed = rb.velocity.magnitude;
+        timeBeforeDestroy = projectileRange / speed;
     }
 
     private void OnEnable()
@@ -26,7 +28,6 @@ public class ProjectileController : MonoBehaviour
     {
         if(timeBeforeDestroy <=0)
         {
-            Debug.Log("Destroy");
             SelfDestroy();
         }
         else

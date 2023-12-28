@@ -19,5 +19,5 @@ MonoBehaviour:
   projectilePiercing: 1
   collectionRadius: 5
   projectileRange: 10
-  playerStartingHealth: 3
+  playerStartingHealth: 1
   playerExperienceMax: 100
