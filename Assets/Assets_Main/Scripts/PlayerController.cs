@@ -119,8 +119,15 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetButtonDown("SpecialRight"))
         {
-            CreateMimic();
-            resetPlayerLevel();
+            if(playerStats.currentLevel > 1)
+            {
+                CreateMimic();
+                resetPlayerLevel();
+            }
+            else
+            {
+                //Can't mimic at level 1
+            }
         }
     }
 

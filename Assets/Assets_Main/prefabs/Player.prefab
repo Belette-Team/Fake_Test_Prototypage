@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6330127155770403338}
   - component: {fileID: 2120849957}
   - component: {fileID: 2120849960}
+  - component: {fileID: 2120849963}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -82,6 +83,7 @@ MonoBehaviour:
   maxExperienceScaling: 1.4
   maxNumberOfUpgrades: 8
   fireRateScaling: 1.2
+  cannonRadius: 0.7
   ballPrefab: {fileID: 8447113142536008075, guid: a2d772829ce043641841b361ccc65f1d, type: 3}
   collectiblePrefab: {fileID: 8279763520225369672, guid: a19c0476aa2fe6844a4f80021a71b4ed, type: 3}
   experienceBar: {fileID: 0}
@@ -118,6 +120,22 @@ MonoBehaviour:
   playerExperience: 0
   playerExperienceMax: 0
   currentLevel: 0
+--- !u!114 &2120849963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6330127155770403334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 244688dbc99742f46aa43bf8004e5b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  gatherSpeed: 2
 --- !u!1 &6330127157351912030
 GameObject:
   m_ObjectHideFlags: 0
