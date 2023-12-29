@@ -64,6 +64,9 @@ public class EnemyController : MonoBehaviour
             }
         }
         // Do animations
+        Instantiate(GameManager.Instance.fx_enemyDeathPrefab, transform.position, Quaternion.identity);
+        
+        // Die
         gameObject.SetActive(false);
     }
 

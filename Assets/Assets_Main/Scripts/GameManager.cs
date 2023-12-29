@@ -20,8 +20,12 @@ public class GameManager : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject collectiblePrefab;
 
+    [Header("Art")]
+    public GameObject fx_enemyDeathPrefab;
+
     [Header ("Game Design Player")]
     public float playAgainTime; //after losing, reset the scene after X seconds
+    
 
     [Header("Collectibles")]
     public float levelUpTime; //level up every X seconds
@@ -117,6 +121,8 @@ public class GameManager : MonoBehaviour
         HideChoices();
 
         ResumeGame();
+        playerController.AfterLevelUp();
+
 
     }
     private void HideChoices()

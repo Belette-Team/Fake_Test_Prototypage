@@ -12,22 +12,29 @@ public class PlayerController : MonoBehaviour
     public int maxNumberOfUpgrades; //a characteristic can only be augmented x times
     public float fireRateScaling; // the scaling of the fire rate
 
-    [Header ("In-Game Use")]
+    [Header("In-Game Use")]
+    [SerializeField] float cannonRadius;
 
     [Header("References")]
+    //Gameobjects and prefabs
     public GameObject ballPrefab;
     public GameObject collectiblePrefab;
     public GameObject experienceBar;
     public GameObject healthBar;
     public GameObject mimicPrefab;
+    public GameObject cannonPrefab;
+
+    //TMP
     public TMP_Text experienceText;
     public TMP_Text healthText;
     public TMP_Text statsText;
     public TMP_Text levelText;
+
+    //other
     public ScriptableObjectStats playerStatsSO;
     private Image experienceProgress;
     private Image healthProgress;
-
+    public Transform cannonsParentTransform;
 
     //Movement
     private float horizontalMovement;
@@ -87,6 +94,8 @@ public class PlayerController : MonoBehaviour
             availableStats.Add(i);
         }
         RefreshUI();
+
+        PlaceCannons();
     }
 
 
@@ -244,6 +253,42 @@ public class PlayerController : MonoBehaviour
         }
         RefreshUI();
     }
+
+    public void AfterLevelUp()
+    {
+        //add cannons
+
+        //destroy all cannons
+        foreach(Transform child in cannonsParentTransform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        //rebuild cannons
+        PlaceCannons();
+    }
+
+    void PlaceCannons()
+    {
+        float angleStep = 360f / playerStats.numberOfProjectiles;
+
+        for (int i = 0; i < playerStats.numberOfProjectiles; i++)
+        {
+            float angle = i * angleStep;
+            Vector3 spawnPosition = CalculateCannonSpawnPosition(angle);
+            Quaternion spawnRotation = Quaternion.Euler(0, angle, 0);
+
+            Instantiate(cannonPrefab, spawnPosition, spawnRotation, cannonsParentTransform);
+        }
+    }
+    Vector3 CalculateCannonSpawnPosition(float angle)
+    {
+        float x = Mathf.Sin(Mathf.Deg2Rad * angle) * cannonRadius;
+        float z = Mathf.Cos(Mathf.Deg2Rad * angle) * cannonRadius;
+
+        return new Vector3(x, 0, z) + transform.position;
+    }
+
     public void ReducePlayerHealth (int p_playerHealth)
     {
         if(playerStats.playerHealth - p_playerHealth <= 0)
@@ -266,6 +311,7 @@ public class PlayerController : MonoBehaviour
         playerStats.playerExperienceMax = Mathf.FloorToInt(playerStats.playerExperienceMax * maxExperienceScaling);
         playerStats.currentLevel++;
         GameManager.Instance.OnLevelUp();
+
     }
     void CreateMimic()
     {
