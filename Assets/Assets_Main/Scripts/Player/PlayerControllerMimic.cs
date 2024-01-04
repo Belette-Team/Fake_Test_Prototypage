@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerControllerMimic : MonoBehaviour
 {
@@ -9,14 +11,22 @@ public class PlayerControllerMimic : MonoBehaviour
     GameObject collectiblePrefab;
 
     float fireRateTimer;
-
+    
+    //UI
+    TMP_Text healthText;
+    int maxHealth;
+    
 
     // Start is called before the first frame update
     void Awake()
     {
         playerStats = GetComponent<Stats>();
+
+        maxHealth = playerStats.playerHealthMax;
         projectilePrefab = GameManager.Instance.projectilePrefab;
         collectiblePrefab = GameManager.Instance.collectiblePrefab;
+        healthText = GetComponentInChildren<TMP_Text>();
+        //UpdateUIHealth();
     }
 
     // Update is called once per frame
@@ -88,12 +98,31 @@ public class PlayerControllerMimic : MonoBehaviour
     public void ReducePlayerHealth(int health)
     {
         playerStats.playerHealth -= health;
-        if(playerStats.playerHealth <= 0)
+        //UpdateUIHealth();
+        if (playerStats.playerHealth <= 0)
         {
             playerStats.playerHealth = 0;
             SelfDestroy();
         }
     }
+
+    //void UpdateUIHealth()
+    //{
+    //    healthText.text = playerStats.playerHealth.ToString();
+    //    Transform progress = null;
+    //    foreach(Transform child in transform)
+    //    {
+    //        if(child.name == "Progress")
+    //        {
+    //            progress = child;
+    //        }
+    //        if(progress != null)
+    //        {
+    //            progress.GetComponent<Image>().fillAmount = playerStats.playerHealth / maxHealth;
+    //        }
+    //    }
+
+    //}
 
     public void SelfDestroy()
     {
