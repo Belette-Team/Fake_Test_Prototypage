@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Timeline;
 using UnityEngine;
+using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -18,22 +20,19 @@ public class EnemySpawner : MonoBehaviour
     public float maxDistanceFromEnemy;
     public float wallMargin;
     private Renderer groundRenderer;
+    private ObjectPooling objectPooling;
 
     private void Awake()
     {
         //Get the address of the ground Renderer
         groundRenderer = groundTransform.GetComponent<Renderer>();
+        objectPooling = transform.parent.GetComponent<ObjectPooling>();
 
         //Get an error if the min distance is higher than the max distance
-        if(minDistanceFromEnemy > maxDistanceFromEnemy)
+        if (minDistanceFromEnemy >= maxDistanceFromEnemy)
         {
             maxDistanceFromEnemy = minDistanceFromEnemy + 1;
             Debug.Log("ERROR : Minimum Distance is higher than the maximum distance ");
-        }
-
-        if (minDistanceFromEnemy > maxDistanceFromEnemy)
-        {
-            maxDistanceFromEnemy = minDistanceFromEnemy + 1;
         }
     }
 
@@ -65,9 +64,8 @@ public class EnemySpawner : MonoBehaviour
         }
 
         //Spawn the enemy and assign the EnemyManager to be his parent
-        Instantiate(enemyPrefab, pos, Quaternion.identity, transform);
+        objectPooling.GetPooledObject(objectPooling.enemyPooledObjects, objectPooling.enemyPrefab, pos, transform).SetActive(true);
     }
-
     void EnemySpawnAtRate()
     {
         if (currentSpawningTime > spawningTime)
