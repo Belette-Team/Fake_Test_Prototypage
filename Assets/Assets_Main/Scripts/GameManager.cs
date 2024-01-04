@@ -42,9 +42,6 @@ public class GameManager : MonoBehaviour
     [Header("To Save")]
     public int currentScore;
 
-    float levelUpTimeTimer; //level up every X seconds
-
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -122,8 +119,6 @@ public class GameManager : MonoBehaviour
 
         ResumeGame();
         playerController.AfterLevelUp();
-
-
     }
     private void HideChoices()
     {

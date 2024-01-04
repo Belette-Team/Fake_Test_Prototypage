@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public GameObject healthBar;
     public GameObject mimicPrefab;
     public GameObject cannonPrefab;
+    [SerializeField] private FixedJoystick _joystick;
 
     //TMP
     public TMP_Text experienceText;
@@ -37,8 +38,6 @@ public class PlayerController : MonoBehaviour
     public Transform cannonsParentTransform;
 
     //Movement
-    private float horizontalMovement;
-    private float verticalMovement;
     private Rigidbody rb3D;
 
     //Weapons & Upgrades
@@ -89,51 +88,41 @@ public class PlayerController : MonoBehaviour
         playerStats.playerExperienceMax = playerStatsSO.playerExperienceMax;
         playerStats.currentLevel = 1;
 
+        //Movement
+        playerStats.movementSpeed = playerStatsSO.movementSpeed;
+
         for (int i = 0; i < numberOfChoices; i++)
         {
             availableStats.Add(i);
         }
         RefreshUI();
 
-        PlaceCannons();
+        PlaceCannons(playerStats, cannonsParentTransform);
     }
 
 
     void Update()
     {
-        // Get the Movement
-        horizontalMovement = Input.GetAxis("Horizontal");
-        verticalMovement = Input.GetAxis("Vertical");
-
         //Automatically shoots
         AutomaticShooting();
 
         //Automatically gathers
         GatherCollectibles(playerStats.collectionRadius, LayerMask.GetMask(LayerMask.LayerToName(collectiblePrefab.layer)));
-
-        if (Input.GetButton("SpecialLeft"))
+    }
+    public void SpawnMimic()
+    {
+        if (playerStats.currentLevel > 1)
         {
-            // Do the things of special_left
-
+            CreateMimic();
+            resetPlayerLevel();
+            PlaceCannons(playerStats, cannonsParentTransform);
         }
 
-        if (Input.GetButtonDown("SpecialRight"))
-        {
-            if(playerStats.currentLevel > 1)
-            {
-                CreateMimic();
-                resetPlayerLevel();
-            }
-            else
-            {
-                //Can't mimic at level 1
-            }
-        }
     }
 
     private void FixedUpdate()
     {
-        rb3D.velocity = new Vector3(playerStats.movementSpeed * horizontalMovement, rb3D.velocity.y, playerStats.movementSpeed * verticalMovement);
+        rb3D.velocity = new Vector3(_joystick.Horizontal * playerStats.movementSpeed, rb3D.velocity.y, _joystick.Vertical * playerStats.movementSpeed );
     }
     #region ResetPlayerLevel
     void resetPlayerLevel()
@@ -141,6 +130,7 @@ public class PlayerController : MonoBehaviour
         ResetPlayerStatsFromSO();
         IncreaseHPFromLevel();
         SetPlayerLevelTo1();
+        RefreshUI();
     }
 
     void ResetPlayerStatsFromSO()
@@ -263,29 +253,28 @@ public class PlayerController : MonoBehaviour
 
     public void AfterLevelUp()
     {
-        //add cannons
-
-        //destroy all cannons
-        foreach(Transform child in cannonsParentTransform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        //rebuild cannons
-        PlaceCannons();
+        //destroy all cannons then rebuild cannons
+        PlaceCannons(playerStats, cannonsParentTransform);
     }
 
-    void PlaceCannons()
+    void PlaceCannons(Stats p_playerStats, Transform p_parent)
     {
-        float angleStep = 360f / playerStats.numberOfProjectiles;
+        if (p_parent.name == "Cannons")
+        {
+            foreach (Transform child in p_parent)
+            {
+                    Destroy(child.gameObject);
+            }
+        }
+        float angleStep = 360f / p_playerStats.numberOfProjectiles;
 
-        for (int i = 0; i < playerStats.numberOfProjectiles; i++)
+        for (int i = 0; i < p_playerStats.numberOfProjectiles; i++)
         {
             float angle = i * angleStep;
             Vector3 spawnPosition = CalculateCannonSpawnPosition(angle);
             Quaternion spawnRotation = Quaternion.Euler(0, angle, 0);
 
-            Instantiate(cannonPrefab, spawnPosition, spawnRotation, cannonsParentTransform);
+            Instantiate(cannonPrefab, spawnPosition, spawnRotation, p_parent);
         }
     }
     Vector3 CalculateCannonSpawnPosition(float angle)
@@ -323,6 +312,7 @@ public class PlayerController : MonoBehaviour
     void CreateMimic()
     {
         GameObject mimic = Instantiate(mimicPrefab, transform.position, Quaternion.identity);
+
         Stats mimicStats = mimic.GetComponent<Stats>();
 
         mimicStats.numberOfProjectiles = playerStats.numberOfProjectiles;
@@ -333,6 +323,9 @@ public class PlayerController : MonoBehaviour
         mimicStats.projectileRange = playerStats.projectileRange;
         mimicStats.collectionRadius = playerStats.collectionRadius;
         mimicStats.playerHealth = playerStats.playerHealth;
+
+        //place his cannons
+        PlaceCannons(mimicStats, mimic.transform);
 }
     #region Refresh UI
     public void RefreshUI()

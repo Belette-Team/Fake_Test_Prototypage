@@ -34,20 +34,19 @@ public class ResourceSurface : MonoBehaviour
 
     public float GatherResource(float value)
     {
-        float gatheredAmount;        
+        float gatheredAmount = value;
         currentAmount -= value;
-        ReduceSizeOfSurface();
-
-        if (currentAmount < 0)
+        float percentageLeft = currentAmount / baseAmount;
+        if (percentageLeft < 0.04f)
         {
-            gatheredAmount = value + currentAmount;
-            currentAmount = 0;
-            return gatheredAmount;
+            gatheredAmount += (percentageLeft) * baseAmount;
+            Destroy(gameObject);
         }
         else
         {
-            return value;
+            ReduceSizeOfSurface(percentageLeft);
         }
+        return gatheredAmount;
     }
 
     void AssignMaterialByType()
@@ -71,14 +70,9 @@ public class ResourceSurface : MonoBehaviour
                 }
         }
     }
-    private void ReduceSizeOfSurface()
+    private void ReduceSizeOfSurface(float newScale)
     {
-        float newScale = currentAmount / baseAmount;
         transform.localScale = new Vector3(initialScale.x * newScale, transform.localScale.y, initialScale.z * newScale);
-        if(newScale <=0.05f)
-        {
-            SelfDetroy();
-        }
     }
 
     void SelfDetroy()
